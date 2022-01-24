@@ -2,6 +2,7 @@ import Head from 'next/head'
 
 import Banner from '../components/Banner'
 import Header from '../components/Header'
+import LargeCard from '../components/LargeCard'
 import MediumCard from '../components/MediumCard'
 import SmallCard from '../components/SmallCard'
 import styles from '../styles/Home.module.css'
@@ -35,7 +36,6 @@ export default function Home({exploreData, cardsData}) {
             ))}
           </div>
         </section>
-
         <section className="pt-6">
           <h2 className="text-4xl font-semibold py-8">Live Anywhere</h2>
           <div className="flex space-x-3 overflow-scroll scrollbar-hide p-3 -ml-3">
@@ -44,6 +44,12 @@ export default function Home({exploreData, cardsData}) {
             ))}
           </div>
         </section>
+        <LargeCard
+          img="https://links.papareact.com/4cj"
+          title="The Greatest Outdoors"
+          description="Wishlists curated by AirBnB"
+          buttonText="Get Inspired"
+        />
       </main>
     </div>
   )
