@@ -2,10 +2,11 @@ import Head from 'next/head'
 
 import Banner from '../components/Banner'
 import Header from '../components/Header'
+import MediumCard from '../components/MediumCard'
 import SmallCard from '../components/SmallCard'
 import styles from '../styles/Home.module.css'
 
-export default function Home({exploreData}) {
+export default function Home({exploreData, cardsData}) {
   return (
     <div className="">
       <Head>
@@ -34,6 +35,15 @@ export default function Home({exploreData}) {
             ))}
           </div>
         </section>
+
+        <section className="pt-6">
+          <h2 className="text-4xl font-semibold py-8">Live Anywhere</h2>
+          <div className="flex space-x-3 overflow-scroll scrollbar-hide p-3 -ml-3">
+            {cardsData?.map(({img, title}) => (
+              <MediumCard key={img} img={img} title={title} />
+            ))}
+          </div>
+        </section>
       </main>
     </div>
   )
@@ -41,7 +51,10 @@ export default function Home({exploreData}) {
 
 // https://nextjs.org/docs/basic-features/data-fetching/get-server-side-props#getserversideprops
 export async function getStaticProps() {
-  const res = await fetch(`https://links.papareact.com/pyp`)
+  let res = await fetch(`https://links.papareact.com/pyp`)
   const exploreData = await res.json()
-  return {props: {exploreData}}
+
+  res = await fetch(`https://links.papareact.com/zp1`)
+  const cardsData = await res.json()
+  return {props: {exploreData, cardsData}}
 }
