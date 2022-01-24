@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import Image from 'next/image'
 import {
   SearchIcon,
@@ -9,6 +9,8 @@ import {
 } from '@heroicons/react/solid'
 
 const Header = () => {
+  const [location, setLocation] = useState('')
+
   return (
     <header className="sticky top-0 z-50 grid grid-cols-3 bg-white shadow-md p-5 md:px-10">
       {/* left - logo */}
@@ -25,6 +27,8 @@ const Header = () => {
       {/* middle - search */}
       <div className="flex items-center md:border-2 rounded-full md:shadow-sm">
         <input
+          value={location}
+          onChange={(event) => setLocation(event.target.value)}
           className="pl-5 bg-transparent outline-none flex-grow text-sm text-gray-500 placeholder-gray-400"
           type="text"
           name="search"
@@ -44,6 +48,8 @@ const Header = () => {
           <UserCircleIcon className="h-6" />
         </div>
       </div>
+
+      {location && <div>date picker</div>}
     </header>
   )
 }
