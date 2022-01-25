@@ -2,6 +2,8 @@ import {useRouter} from 'next/router'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import {format} from 'date-fns'
+import InfoCard from '../components/InfoCard'
+import {searchData} from '../fixtures/search-data'
 
 const Search = ({searchResults}) => {
   const router = useRouter()
@@ -34,6 +36,34 @@ const Search = ({searchResults}) => {
             <p className="button">Rooms &amp; Beds</p>
             <p className="button">More Filters</p>
           </div>
+
+          <div className="flex flex-col">
+            {searchResults.map(
+              ({
+                _id,
+                title,
+                content,
+                location,
+                image,
+                price,
+                from,
+                to,
+                bed,
+              }) => (
+                <InfoCard
+                  key={_id}
+                  title={title}
+                  content={content}
+                  location={location}
+                  image={image}
+                  price={price}
+                  from={from}
+                  to={to}
+                  bed={bed}
+                />
+              ),
+            )}
+          </div>
         </section>
       </main>
 
@@ -51,8 +81,8 @@ export async function getServerSideProps(context) {
   // console.log(`query : ${JSON.stringify(query)}`)
 
   const {location, startDate, endDate, noOfGuests} = query
-  const formattedStartDate = format(new Date(startDate), 'dd-MM-yyyy') //'dd mm yyyy'
-  const formattedEndDate = format(new Date(endDate), 'dd-MM-yyyy') //'dd mm yyyyy'
+  const formattedStartDate = format(new Date(startDate), 'yyyy-MM-dd') // 'dd-MM-yyyy' //'dd mm yyyy'
+  const formattedEndDate = format(new Date(endDate), 'yyyy-MM-dd') // yyyy-MM-dd 'dd-MM-yyyy' //'dd mm yyyyy'
 
   const params = {
     location,
@@ -63,15 +93,16 @@ export async function getServerSideProps(context) {
 
   let queryParams = Object.keys(JSON.parse(JSON.stringify(params)))
     .map((k) => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
+    // .map((k) => k + '=' + params[k])
     .join('&')
 
-  const url = `${baseUrl}?${queryParams}`
+  // const url = `${baseUrl}?${queryParams}`
 
-  const res = await fetch(url, {method: 'POST'})
-  const searchResults = await res.json()
+  // const res = await fetch(url, {method: 'POST'})
+  // const searchResults = await res.json()
 
-  // Pass data to the page via props
-  return {props: {searchResults}}
+  // return {props: {searchResults}}
+  return {props: {searchResults: searchData}}
 }
 
 // const url = `http://localhost:5000/api/v1/search-listings?${params}`
