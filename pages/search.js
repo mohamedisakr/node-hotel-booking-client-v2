@@ -3,14 +3,16 @@ import Header from '../components/Header'
 import Footer from '../components/Footer'
 import {format} from 'date-fns'
 
-const Search = () => {
+const Search = ({searchResults}) => {
   const router = useRouter()
   const {location, startDate, endDate, noOfGuests} = router.query
-  // console.log(router.query)
-  const formattedStartDate = format(new Date(startDate), 'dd MMMM yy')
-  const formattedEndDate = format(new Date(endDate), 'dd MMMM yy')
+
+  const formattedStartDate = format(new Date(startDate), 'dd-MM-yyyy') // 'dd MMMM yy'
+  const formattedEndDate = format(new Date(endDate), 'dd-MM-yyyy') //  'dd MMMM yy'
   const duration = `${formattedStartDate} - ${formattedEndDate}`
   const placeholder = `${location} | ${duration} | ${noOfGuests} guests`
+
+  console.log(searchResults)
 
   return (
     <div>
@@ -41,3 +43,63 @@ const Search = () => {
 }
 
 export default Search
+
+export async function getServerSideProps(context) {
+  let {query} = context
+
+  const baseUrl = `http://localhost:5000/api/v1/search-listings`
+  // console.log(`query : ${JSON.stringify(query)}`)
+
+  const {location, startDate, endDate, noOfGuests} = query
+  const formattedStartDate = format(new Date(startDate), 'dd-MM-yyyy') //'dd mm yyyy'
+  const formattedEndDate = format(new Date(endDate), 'dd-MM-yyyy') //'dd mm yyyyy'
+
+  const params = {
+    location,
+    startDate: formattedStartDate,
+    endDate: formattedEndDate,
+    bed: noOfGuests,
+  }
+
+  let queryParams = Object.keys(JSON.parse(JSON.stringify(params)))
+    .map((k) => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
+    .join('&')
+
+  const url = `${baseUrl}?${queryParams}`
+
+  const res = await fetch(url, {method: 'POST'})
+  const searchResults = await res.json()
+
+  // Pass data to the page via props
+  return {props: {searchResults}}
+}
+
+// const url = `http://localhost:5000/api/v1/search-listings?${params}`
+// const url = `http://localhost:5000/api/v1/search-listings?${
+//   (location, startDate, noOfGuests)
+// }`
+
+// ------------------------------------------
+
+// export async function getServerSideProps(context) {
+//   let {params, query} = context
+//   // console.log(`whole context : ${JSON.stringify(context)}`)
+//   console.log(`query : ${JSON.stringify(query)}`)
+//   console.log(`params : ${JSON.stringify(query)}`)
+
+//   // const url = `http://localhost:5000/api/v1/search-listings?${query}`
+//   const url = `http://localhost:5000/api/v1/search-listings?${params}`
+
+//   const res = await fetch(url)
+//   const searchResults = await res.json()
+
+//   // Pass data to the page via props
+//   return {props: {searchResults}}
+// }
+
+// ------------------------------------------
+
+// let params =  {location, startDate, noOfGuests}
+// Object.keys(params)
+//   .map((k) => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
+//   .join('&')
