@@ -1,4 +1,5 @@
 import React, {useState} from 'react'
+import {useRouter} from 'next/router'
 import Image from 'next/image'
 import {DateRangePicker} from 'react-date-range'
 import {
@@ -16,6 +17,7 @@ const Header = () => {
   const [startDate, setStartDate] = useState(new Date())
   const [endDate, setEndDate] = useState(new Date())
   const [noOfGuests, setNoOfGuests] = useState(1)
+  const router = useRouter()
 
   const selectionRange = {
     startDate,
@@ -34,7 +36,10 @@ const Header = () => {
   return (
     <header className="sticky top-0 z-50 grid grid-cols-3 bg-white shadow-md p-5 md:px-10">
       {/* left - logo */}
-      <div className="relative flex items-center h-10 cursor-pointer my-auto">
+      <div
+        onClick={(event) => router.push('/')}
+        className="relative flex items-center h-10 cursor-pointer my-auto"
+      >
         <Image
           src="https://links.papareact.com/qd3"
           alt="airbnb"
