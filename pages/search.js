@@ -3,7 +3,7 @@ import Header from '../components/Header'
 import Footer from '../components/Footer'
 import {format} from 'date-fns'
 import InfoCard from '../components/InfoCard'
-import {searchData} from '../fixtures/search-data'
+// import {searchData} from '../fixtures/search-data'
 
 const Search = ({searchResults}) => {
   const router = useRouter()
@@ -39,27 +39,15 @@ const Search = ({searchResults}) => {
 
           <div className="flex flex-col">
             {searchResults.map(
-              ({
-                _id,
-                title,
-                content,
-                location,
-                image,
-                price,
-                from,
-                to,
-                bed,
-              }) => (
+              ({img, location, title, description, star, price, total}) => (
                 <InfoCard
-                  key={_id}
+                  key={img}
+                  img={img}
                   title={title}
-                  content={content}
+                  description={description}
                   location={location}
-                  image={image}
+                  image={img}
                   price={price}
-                  from={from}
-                  to={to}
-                  bed={bed}
                 />
               ),
             )}
@@ -75,6 +63,13 @@ const Search = ({searchResults}) => {
 export default Search
 
 export async function getServerSideProps(context) {
+  const res = await fetch(`https://links.papareact.com/isz`)
+  const searchResults = await res.json()
+  return {props: {searchResults}}
+
+  /*
+{_id, title, content, location, image, price, from, to, bed}
+
   let {query} = context
 
   const baseUrl = `http://localhost:5000/api/v1/search-listings`
@@ -96,13 +91,12 @@ export async function getServerSideProps(context) {
     // .map((k) => k + '=' + params[k])
     .join('&')
 
-  // const url = `${baseUrl}?${queryParams}`
+  const url = `${baseUrl}?${queryParams}`
 
-  // const res = await fetch(url, {method: 'POST'})
-  // const searchResults = await res.json()
-
+  const res = await fetch(url, {method: 'POST'})
+  const searchResults = await res.json()
   // return {props: {searchResults}}
-  return {props: {searchResults: searchData}}
+*/
 }
 
 // const url = `http://localhost:5000/api/v1/search-listings?${params}`
